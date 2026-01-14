@@ -1,0 +1,1455 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Medforze API",
+    "version": "1.0.0",
+    "description": "Documentación de la API de Medforze"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:{port}/api/v1",
+      "variables": {
+        "port": {
+          "default": "3000"
+        }
+      }
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key",
+        "description": "ID de la llave de API",
+        "example": "master_key_123"
+      },
+      "ApiSecretAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-secret",
+        "description": "Secreto de la llave de API",
+        "example": "master_secret_456"
+      },
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Introduce el access_token obtenido en el login"
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": [],
+      "ApiSecretAuth": [],
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api-keys": {
+      "post": {
+        "summary": "Crear una nueva API Key",
+        "tags": [
+          "ApiKeys"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "applicationName"
+                ],
+                "properties": {
+                  "applicationName": {
+                    "type": "string",
+                    "description": "Nombre de la aplicación",
+                    "example": "Mi Aplicación"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descripción opcional de la API Key",
+                    "example": "Key para entorno de desarrollo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "API Key creada exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "API Key created successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "keyId": {
+                          "type": "string"
+                        },
+                        "secretKey": {
+                          "type": "string"
+                        },
+                        "applicationName": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "isActive": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "403": {
+            "description": "Prohibido - Solo se permite la Master Key"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/api-keys/redirect-uri": {
+      "post": {
+        "summary": "Agregar una URL de redirección a la API Key",
+        "description": "Permite agregar una URL de redirección permitida. Si se usa la Master Key, se debe enviar el keyId en el body. Si se usa una API Key normal, se modificará a sí misma.",
+        "tags": [
+          "ApiKeys"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "redirectUri"
+                ],
+                "properties": {
+                  "redirectUri": {
+                    "type": "string",
+                    "description": "URL de redirección a agregar",
+                    "example": "https://myapp.com/callback"
+                  },
+                  "keyId": {
+                    "type": "string",
+                    "description": "(Requerido solo si se usa Master Key) ID de la API Key a modificar",
+                    "example": "5f9b4b3b9b4b3b9b4b3b9b4b"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "URL de redirección agregada exitosamente"
+          },
+          "400": {
+            "description": "Datos de entrada inválidos o URL ya existe"
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "404": {
+            "description": "API Key no encontrada"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Eliminar una URL de redirección de la API Key",
+        "description": "Permite eliminar una URL de redirección. Si se usa la Master Key, se debe enviar el keyId en el body. Si se usa una API Key normal, se modificará a sí misma.",
+        "tags": [
+          "ApiKeys"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "redirectUri"
+                ],
+                "properties": {
+                  "redirectUri": {
+                    "type": "string",
+                    "description": "URL de redirección a eliminar",
+                    "example": "https://myapp.com/callback"
+                  },
+                  "keyId": {
+                    "type": "string",
+                    "description": "(Requerido solo si se usa Master Key) ID de la API Key a modificar",
+                    "example": "5f9b4b3b9b4b3b9b4b3b9b4b"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "URL de redirección eliminada exitosamente"
+          },
+          "400": {
+            "description": "Datos de entrada inválidos"
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "404": {
+            "description": "API Key o URL de redirección no encontrada"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/auth/check-identifier": {
+      "post": {
+        "summary": "Verificar si un usuario existe por su nombre de usuario",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "username"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "yitodev"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resultado de la verificación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Usuario encontrado"
+                    },
+                    "payload": {
+                      "type": "object",
+                      "properties": {
+                        "exists": {
+                          "type": "boolean",
+                          "example": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Solicitud incorrecta"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/auth/authorize": {
+      "get": {
+        "summary": "Validar la redirección para autorización",
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "redirect_uri",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "URL de redirección (url-encoded)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Autorización exitosa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Autorización exitosa"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "redirect_uri": {
+                          "type": "string",
+                          "example": "https://example.com/callback"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "redirect_uri es requerido"
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "403": {
+            "description": "URL de redirección no permitida"
+          }
+        }
+      }
+    },
+    "/auth/send-otp": {
+      "post": {
+        "summary": "Enviar un código OTP al usuario",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "user_identifier",
+                  "channel",
+                  "purpose"
+                ],
+                "properties": {
+                  "user_identifier": {
+                    "type": "string",
+                    "description": "Correo electrónico o número de teléfono (formato E.164)",
+                    "example": "user@example.com"
+                  },
+                  "channel": {
+                    "type": "string",
+                    "enum": [
+                      "email",
+                      "sms",
+                      "whatsapp"
+                    ],
+                    "example": "email"
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "enum": [
+                      "registration",
+                      "login",
+                      "password_reset",
+                      "transaction_auth"
+                    ],
+                    "example": "registration"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "properties": {
+                      "ip_address": {
+                        "type": "string",
+                        "example": "192.168.1.1"
+                      },
+                      "device_id": {
+                        "type": "string",
+                        "example": "device-123"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP enviado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "OTP enviado con éxito"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos de entrada inválidos"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/auth/validate-otp": {
+      "post": {
+        "summary": "Validar un código OTP",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "user_identifier",
+                  "otp_code",
+                  "purpose"
+                ],
+                "properties": {
+                  "user_identifier": {
+                    "type": "string",
+                    "description": "Correo electrónico o número de teléfono (formato E.164)",
+                    "example": "user@example.com"
+                  },
+                  "otp_code": {
+                    "type": "string",
+                    "description": "Código de 6 dígitos enviado",
+                    "example": "123456"
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "enum": [
+                      "registration",
+                      "login",
+                      "password_reset",
+                      "transaction_auth"
+                    ],
+                    "example": "registration"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP validado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "OTP validado correctamente"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "action_token": {
+                          "type": "string",
+                          "description": "JWT que valida la verificación del OTP para ser usado en pasos siguientes",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Código incorrecto, expirado o demasiados intentos"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "summary": "Registrar un nuevo usuario",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "registration_token",
+                  "name",
+                  "lastname",
+                  "password",
+                  "phone",
+                  "codeChallenge",
+                  "codeChallengeMethod"
+                ],
+                "properties": {
+                  "registration_token": {
+                    "type": "string",
+                    "description": "Token de acción obtenido tras validar el OTP de registro",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Juan"
+                  },
+                  "lastname": {
+                    "type": "string",
+                    "example": "Pérez"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password123"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": "+573000000000"
+                  },
+                  "codeChallenge": {
+                    "type": "string",
+                    "example": "challenge123"
+                  },
+                  "codeChallengeMethod": {
+                    "type": "string",
+                    "example": "sha-256"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuario registrado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Usuario registrado con éxito"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "auth_code": {
+                          "type": "string",
+                          "example": "auth_code_123"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos o usuario ya registrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Iniciar sesión y obtener un código de autorización",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "username",
+                  "password",
+                  "codeChallenge",
+                  "codeChallengeMethod"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "user@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password123"
+                  },
+                  "codeChallenge": {
+                    "type": "string",
+                    "example": "ZZp9ETTGnXsD_bDmHOc_6rED26h9d5Cb9oQWgoereY4"
+                  },
+                  "codeChallengeMethod": {
+                    "type": "string",
+                    "example": "sha-256"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login exitoso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Login exitoso"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "auth_code": {
+                          "type": "string",
+                          "example": "auth_code_123"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parámetros inválidos"
+          },
+          "401": {
+            "description": "Credenciales inválidas"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/auth/token": {
+      "post": {
+        "summary": "Intercambiar un código de autorización por tokens de acceso",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "auth_code",
+                  "code_verifier",
+                  "device_info"
+                ],
+                "properties": {
+                  "auth_code": {
+                    "type": "string",
+                    "description": "Código de autorización obtenido previamente",
+                    "example": "auth_code_123"
+                  },
+                  "code_verifier": {
+                    "type": "string",
+                    "description": "Verificador de código para PKCE",
+                    "example": "mi_texto_secreto"
+                  },
+                  "device_info": {
+                    "type": "object",
+                    "required": [
+                      "model",
+                      "os",
+                      "app_version",
+                      "device_id"
+                    ],
+                    "properties": {
+                      "model": {
+                        "type": "string",
+                        "example": "iPhone 15 Pro"
+                      },
+                      "os": {
+                        "type": "string",
+                        "example": "iOS 17.4"
+                      },
+                      "app_version": {
+                        "type": "string",
+                        "example": "1.0.2"
+                      },
+                      "device_id": {
+                        "type": "string",
+                        "example": "uuid-1234-5678"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tokens generados con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Tokens generados con éxito"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "access_token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                        },
+                        "refresh_token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                        },
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "publicCode": {
+                              "type": "string",
+                              "example": "USER123"
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Juan"
+                            },
+                            "lastname": {
+                              "type": "string",
+                              "example": "Pérez"
+                            },
+                            "username": {
+                              "type": "string",
+                              "example": "user@example.com"
+                            },
+                            "email": {
+                              "type": "string",
+                              "example": "user@example.com"
+                            },
+                            "phone": {
+                              "type": "string",
+                              "example": "+573000000000"
+                            },
+                            "role": {
+                              "type": "string",
+                              "example": "guest"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parámetros inválidos, código expirado o verifier incorrecto"
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Refresca el access token usando un refresh token",
+        "description": "Permite obtener un nuevo access_token y refresh_token usando un refresh_token válido y el device_id asociado.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "refresh_token",
+                  "device_id"
+                ],
+                "properties": {
+                  "refresh_token": {
+                    "type": "string",
+                    "description": "El refresh token obtenido en el login o intercambio previo",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  },
+                  "device_id": {
+                    "type": "string",
+                    "description": "ID único del hardware",
+                    "example": "uuid-1234-5678"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tokens refrescados con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Tokens refrescados con éxito"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "access_token": {
+                          "type": "string"
+                        },
+                        "refresh_token": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parámetros faltantes"
+          },
+          "401": {
+            "description": "Sesión no encontrada, inválida o refresh token expirado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Obtiene la información del usuario autenticado",
+        "description": "Retorna los datos del usuario asociado al access_token enviado en el header Authorization.",
+        "responses": {
+          "200": {
+            "description": "Información del usuario obtenida con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Información del usuario obtenida con éxito"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "publicCode": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "lastname": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token no proporcionado, inválido o expirado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/auth/change-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Cambia la contraseña del usuario autenticado",
+        "description": "Permite al usuario logueado cambiar su contraseña actual por una nueva. Envía un correo de notificación tras el cambio.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "currentPassword",
+                  "newPassword"
+                ],
+                "properties": {
+                  "currentPassword": {
+                    "type": "string",
+                    "example": "OldPass123!"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "example": "NewPass123!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contraseña actualizada con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Contraseña actualizada con éxito"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Contraseña actual incorrecta o parámetros faltantes"
+          },
+          "401": {
+            "description": "No autorizado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "summary": "Generar un OTP para restablecimiento de contraseña",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "username"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "Nombre de usuario o correo electrónico",
+                    "example": "user@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP enviado con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "OTP enviado con éxito"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "channel": {
+                          "type": "string",
+                          "example": "email"
+                        },
+                        "userIdentifier": {
+                          "type": "string",
+                          "example": "use***@example.com"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Username es requerido"
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "summary": "Establecer una nueva contraseña utilizando un token de recuperación válido",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "reset_token",
+                  "new_password",
+                  "code_challenge",
+                  "code_challenge_method"
+                ],
+                "properties": {
+                  "reset_token": {
+                    "type": "string",
+                    "description": "Token obtenido tras validar el OTP de password_reset",
+                    "example": "jwt_token_here"
+                  },
+                  "new_password": {
+                    "type": "string",
+                    "description": "Nueva contraseña (mínimo 8 caracteres)",
+                    "example": "newpassword123"
+                  },
+                  "code_challenge": {
+                    "type": "string",
+                    "description": "Code challenge para el inicio de sesión automático",
+                    "example": "ZZp9ETTGnXsD_bDmHOc_6rED26h9d5Cb9oQWgoereY4"
+                  },
+                  "code_challenge_method": {
+                    "type": "string",
+                    "description": "Método del code challenge (sha-256 o plain)",
+                    "example": "sha-256"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contraseña restablecida con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Contraseña restablecida con éxito"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "auth_code": {
+                          "type": "string",
+                          "example": "abc-123"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parámetros inválidos, token expirado o contraseña muy corta"
+          },
+          "404": {
+            "description": "Usuario no encontrado"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/dev-tools/send-sms": {
+      "post": {
+        "summary": "Enviar un SMS de prueba",
+        "tags": [
+          "DevTools"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "phoneNumber",
+                  "message"
+                ],
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Número de teléfono en formato E.164",
+                    "example": "+1234567890"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Mensaje a enviar",
+                    "example": "Hola, este es un mensaje de prueba desde Medforze API"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SMS enviado correctamente"
+          },
+          "400": {
+            "description": "Parámetros faltantes o incorrectos"
+          },
+          "500": {
+            "description": "Error al enviar el SMS"
+          }
+        }
+      }
+    },
+    "/dev-tools/send-mail": {
+      "post": {
+        "summary": "Enviar un correo de prueba",
+        "tags": [
+          "DevTools"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "to",
+                  "type",
+                  "metadata"
+                ],
+                "properties": {
+                  "to": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Lista de destinatarios",
+                    "example": [
+                      "usuario@ejemplo.com"
+                    ]
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "WELCOME"
+                    ],
+                    "description": "Tipo de correo a enviar",
+                    "example": "WELCOME"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "description": "Metadatos para la plantilla",
+                    "example": {
+                      "userName": "Nombre del Usuario"
+                    }
+                  },
+                  "replyToAddresses": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Direcciones de respuesta opcionales",
+                    "example": [
+                      "soporte@medforze.com"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Correo enviado correctamente"
+          },
+          "400": {
+            "description": "Parámetros faltantes o incorrectos"
+          },
+          "500": {
+            "description": "Error al enviar el correo"
+          }
+        }
+      }
+    },
+    "/dev-tools/generate-hash": {
+      "post": {
+        "summary": "Generar un hash según un método de encriptación",
+        "tags": [
+          "DevTools"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "text"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "Texto a encriptar",
+                    "example": "mi_texto_secreto"
+                  },
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "sha-256"
+                    ],
+                    "description": "Método de encriptación",
+                    "default": "sha-256",
+                    "example": "sha-256"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Hash generado correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "hash": {
+                      "type": "string",
+                      "description": "Hash generado"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parámetros faltantes o incorrectos"
+          },
+          "500": {
+            "description": "Error al generar el hash"
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Verificar el estado del servidor",
+        "tags": [
+          "General"
+        ],
+        "responses": {
+          "200": {
+            "description": "Estado del servidor, uptime y versión",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "uptime": {
+                      "type": "string",
+                      "example": "120s"
+                    },
+                    "version": {
+                      "type": "string",
+                      "example": "1.0.0"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/openapi.json": {
+      "get": {
+        "summary": "Obtener la especificación OpenAPI en formato JSON",
+        "tags": [
+          "General"
+        ],
+        "responses": {
+          "200": {
+            "description": "Especificación OpenAPI",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "ApiKeys",
+      "description": "Endpoints para la gestión de API Keys"
+    },
+    {
+      "name": "Auth",
+      "description": "Endpoints de autenticación"
+    },
+    {
+      "name": "DevTools",
+      "description": "Herramientas de desarrollo"
+    },
+    {
+      "name": "General",
+      "description": "Endpoints generales del sistema"
+    }
+  ]
+}
