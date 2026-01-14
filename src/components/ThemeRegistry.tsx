@@ -1,14 +1,18 @@
 'use client';
 
-import { ThemeProvider } from '@mui/material/styles';
+import { ThemeContextProvider } from '@/store/ThemeContext';
 import CssBaseline from '@mui/material/CssBaseline';
-import theme from '@/theme';
+import ThemeSwitch from '@/components/ThemeSwitch';
+import { Box } from '@mui/material';
 
 export default function ThemeRegistry({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeContextProvider>
       <CssBaseline />
+      <Box sx={{ position: 'fixed', top: 16, right: 16, zIndex: 1100 }}>
+        <ThemeSwitch />
+      </Box>
       {children}
-    </ThemeProvider>
+    </ThemeContextProvider>
   );
 }

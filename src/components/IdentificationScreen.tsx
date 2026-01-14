@@ -67,10 +67,10 @@ export default function IdentificationScreen() {
         <CardContent>
           <Box sx={{ mb: 3, textAlign: 'center' }}>
             <Typography variant="h4" gutterBottom>
-              ¡Hola! Qué gusto verte
+              Identificación
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Escribe tu nombre de usuario o correo electrónico para acceder a los servicios de Medforze
+              Escribe tu nombre de usuario o correo electrónico para acceder a la plataforma
             </Typography>
           </Box>
           <form onSubmit={handleSubmit(onSubmit)}>
