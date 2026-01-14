@@ -67,7 +67,7 @@ export default function IdentificationScreen() {
         <CardContent>
           <Box sx={{ mb: 3, textAlign: 'center' }}>
             <Typography variant="h4" gutterBottom>
-              Identificación
+              Accede a tu cuenta
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Escribe tu nombre de usuario o correo electrónico para acceder a la plataforma
