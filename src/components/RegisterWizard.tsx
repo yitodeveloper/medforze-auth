@@ -100,10 +100,10 @@ export default function RegisterWizard() {
   return (
     <Container maxWidth="sm">
       <Box sx={{ mt: 4, mb: 4 }}>
-        <Button startIcon={<ArrowLeft size={18} />} onClick={() => router.push('/')} sx={{ mb: 2 }}>
+        <Button startIcon={<ArrowLeft size={18} />} onClick={() => router.push('/')} sx={{ mb: 2, color: 'text.secondary' }}>
           Cancelar
         </Button>
-        <Typography variant="h4" color="primary" gutterBottom sx={{ fontWeight: 700 }}>
+        <Typography variant="h4" gutterBottom>
           Crea tu cuenta
         </Typography>
         <Stepper activeStep={activeStep} sx={{ mt: 3, mb: 4 }}>
@@ -145,7 +145,7 @@ export default function RegisterWizard() {
           {activeStep === 1 && (
             <form onSubmit={otpForm.handleSubmit(handleOtpSubmit)}>
               <Typography variant="body1" sx={{ mb: 3, textAlign: 'center' }}>
-                Hemos enviado un código de 6 dígitos a <strong>{contactForm.getValues().email}</strong>
+                Hemos enviado un código de 6 dígitos a <strong style={{ color: '#007BFF' }}>{contactForm.getValues().email}</strong>
               </Typography>
               <TextField
                 fullWidth
@@ -153,7 +153,15 @@ export default function RegisterWizard() {
                 {...otpForm.register('otp')}
                 error={!!otpForm.formState.errors.otp}
                 helperText={otpForm.formState.errors.otp?.message}
-                inputProps={{ maxLength: 6, style: { textAlign: 'center', letterSpacing: '8px', fontSize: '24px' } }}
+                inputProps={{
+                  maxLength: 6,
+                  style: {
+                    textAlign: 'center',
+                    letterSpacing: '12px',
+                    fontSize: '32px',
+                    fontWeight: '700'
+                  }
+                }}
                 sx={{ mb: 3 }}
               />
               {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}

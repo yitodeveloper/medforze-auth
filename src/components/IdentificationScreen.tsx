@@ -47,19 +47,37 @@ export default function IdentificationScreen() {
   return (
     <Container maxWidth="sm">
       <Box sx={{ mt: 8, mb: 4, textAlign: 'center' }}>
-        <Typography variant="h4" color="primary" gutterBottom sx={{ fontWeight: 700 }}>
-          Medforze
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Ingresa tu usuario para continuar
-        </Typography>
+        <Box sx={{ mb: 4 }}>
+          {/* Logo Placeholder - Asumiendo variante negativa/blanca según lineamientos */}
+          <Typography
+            variant="h4"
+            component="h1"
+            sx={{
+              fontWeight: 700,
+              color: 'primary.main',
+              letterSpacing: '-0.5px',
+              textTransform: 'uppercase'
+            }}
+          >
+            Medforze
+          </Typography>
+        </Box>
       </Box>
-      <Card sx={{ p: 2 }}>
+      <Card>
         <CardContent>
+          <Box sx={{ mb: 3, textAlign: 'center' }}>
+            <Typography variant="h4" gutterBottom>
+              ¡Hola! Qué gusto verte
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Escribe tu nombre de usuario o correo electrónico para acceder a los servicios de Medforze
+            </Typography>
+          </Box>
           <form onSubmit={handleSubmit(onSubmit)}>
             <TextField
               fullWidth
-              label="Usuario"
+              autoFocus
+              label="Usuario o Correo Electrónico"
               variant="outlined"
               {...register('username')}
               error={!!errors.username}

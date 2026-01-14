@@ -60,7 +60,16 @@ export default function HandshakeScreen() {
     <Container maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
       <Box sx={{ textAlign: 'center' }}>
         <Box sx={{ mb: 4, position: 'relative', display: 'inline-flex' }}>
-          <CircularProgress size={80} thickness={2} sx={{ color: 'primary.main' }} />
+          <CircularProgress 
+            size={80} 
+            thickness={2} 
+            sx={{ 
+              color: 'primary.main',
+              '& .MuiCircularProgress-circle': {
+                strokeLinecap: 'round',
+              }
+            }} 
+          />
           <Box
             sx={{
               top: 0,
@@ -73,17 +82,17 @@ export default function HandshakeScreen() {
               justifyContent: 'center',
             }}
           >
-            <ShieldCheck size={40} color="#0057FF" />
+            <ShieldCheck size={40} color="#007BFF" className="loading-pulse" />
           </Box>
         </Box>
-        <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
+        <Typography variant="h4" sx={{ mb: 1 }}>
           Iniciando sesión segura...
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant="body2">
           Validando identidad y configurando tu espacio de salud.
         </Typography>
         {completed && (
-          <Typography variant="body2" sx={{ mt: 4, color: 'success.main', fontWeight: 500 }}>
+          <Typography variant="body2" sx={{ mt: 4, color: 'primary.main', fontWeight: 600 }}>
             ¡Todo listo! Redirigiendo...
           </Typography>
         )}

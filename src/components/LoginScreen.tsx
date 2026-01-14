@@ -54,17 +54,17 @@ export default function LoginScreen() {
   return (
     <Container maxWidth="sm">
       <Box sx={{ mt: 8, mb: 4 }}>
-        <Button startIcon={<ArrowLeft size={18} />} onClick={() => router.push('/')} sx={{ mb: 2 }}>
+        <Button startIcon={<ArrowLeft size={18} />} onClick={() => router.push('/')} sx={{ mb: 2, color: 'text.secondary' }}>
           Volver
         </Button>
-        <Typography variant="h4" color="primary" gutterBottom sx={{ fontWeight: 700 }}>
+        <Typography variant="h4" gutterBottom>
           ¡Hola de nuevo!
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant="body2">
           Ingresa tu contraseña para {username}
         </Typography>
       </Box>
-      <Card sx={{ p: 2 }}>
+      <Card>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <TextField
@@ -80,7 +80,7 @@ export default function LoginScreen() {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" sx={{ color: 'text.secondary' }}>
                       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </IconButton>
                   </InputAdornment>
@@ -98,7 +98,7 @@ export default function LoginScreen() {
             >
               {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
             </Button>
-            <Button fullWidth variant="text" sx={{ mt: 2 }} onClick={() => { /* Navegar a recuperación */ }}>
+            <Button fullWidth variant="text" sx={{ mt: 2, color: 'primary.main', fontWeight: 600 }} onClick={() => { /* Navegar a recuperación */ }}>
               Olvidé mi contraseña
             </Button>
           </form>
