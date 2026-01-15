@@ -23,7 +23,7 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const { params, username, setAuthCode, getQueryString } = useAuth();
   const router = useRouter();
-  
+
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
@@ -38,7 +38,7 @@ export default function LoginScreen() {
         codeChallenge: params.codeChallenge,
         codeChallengeMethod: params.codeChallengeMethod,
       });
-      setAuthCode(response.data.data.auth_code);
+      setAuthCode(response.data.payload.auth_code);
       router.push(`/handshake${getQueryString()}`);
     } catch (err: any) {
       if (err.response?.status === 401) {
@@ -57,19 +57,22 @@ export default function LoginScreen() {
         <Button startIcon={<ArrowLeft size={18} />} onClick={() => router.push(`/identifier${getQueryString()}`)} sx={{ mb: 2, color: 'text.secondary' }}>
           Volver
         </Button>
-        <Typography variant="h4" gutterBottom>
-          ¡Hola de nuevo!
-        </Typography>
-        <Typography variant="body2">
-          Ingresa tu contraseña para {username}
-        </Typography>
       </Box>
       <Card>
         <CardContent>
+          <Box sx={{ mb: 3, textAlign: 'center' }}>
+            <Typography variant="h4" gutterBottom>
+              ¡Hola de nuevo!
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Ingresa tu contraseña para {username}
+            </Typography>
+          </Box>
           <form onSubmit={handleSubmit(onSubmit)}>
             <TextField
               fullWidth
               label="Contraseña"
+              autoFocus
               type={showPassword ? 'text' : 'password'}
               variant="outlined"
               {...register('password')}
@@ -98,7 +101,12 @@ export default function LoginScreen() {
             >
               {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
             </Button>
-            <Button fullWidth variant="text" sx={{ mt: 2, color: 'primary.main', fontWeight: 600 }} onClick={() => { /* Navegar a recuperación */ }}>
+            <Button 
+              fullWidth 
+              variant="text" 
+              sx={{ mt: 2, color: 'primary.main', fontWeight: 600 }} 
+              onClick={() => router.push(`/forgot-password${getQueryString()}`)}
+            >
               Olvidé mi contraseña
             </Button>
           </form>

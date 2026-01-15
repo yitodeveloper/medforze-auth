@@ -1,8 +1,8 @@
 import api from './axios';
 
 export const authApi = {
-  authorize: (redirectUri: string, clientId: string) =>
-    api.get(`/auth/authorize?redirect_uri=${encodeURIComponent(redirectUri)}&client_id=${encodeURIComponent(clientId)}`),
+  authorize: (redirectUri: string | null, clientId: string | null) =>
+    api.get(`/auth/authorize?redirect_uri=${encodeURIComponent(redirectUri || '')}&client_id=${encodeURIComponent(clientId || '')}`),
 
   checkIdentifier: (username: string) =>
     api.post('/auth/check-identifier', { username }),
