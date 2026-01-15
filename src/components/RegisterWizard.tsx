@@ -33,7 +33,7 @@ export default function RegisterWizard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [registrationToken, setRegistrationToken] = useState<string | null>(null);
-  const { params, username, setAuthCode } = useAuth();
+  const { params, username, setAuthCode, getQueryString } = useAuth();
   const router = useRouter();
 
   const contactForm = useForm({ resolver: zodResolver(contactSchema), defaultValues: { email: username.includes('@') ? username : '', phone: '' } });
@@ -89,7 +89,7 @@ export default function RegisterWizard() {
         codeChallengeMethod: params.codeChallengeMethod,
       });
       setAuthCode(response.data.data.auth_code);
-      router.push('/handshake');
+      router.push(`/handshake${getQueryString()}`);
     } catch (err) {
       setError('Error al completar el registro');
     } finally {
@@ -100,7 +100,7 @@ export default function RegisterWizard() {
   return (
     <Container maxWidth="sm">
       <Box sx={{ mt: 4, mb: 4 }}>
-        <Button startIcon={<ArrowLeft size={18} />} onClick={() => router.push('/')} sx={{ mb: 2, color: 'text.secondary' }}>
+        <Button startIcon={<ArrowLeft size={18} />} onClick={() => router.push(`/identifier${getQueryString()}`)} sx={{ mb: 2, color: 'text.secondary' }}>
           Cancelar
         </Button>
         <Typography variant="h4" gutterBottom>

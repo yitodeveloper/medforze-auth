@@ -21,7 +21,7 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const { params, username, setAuthCode } = useAuth();
+  const { params, username, setAuthCode, getQueryString } = useAuth();
   const router = useRouter();
   
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
@@ -39,7 +39,7 @@ export default function LoginScreen() {
         codeChallengeMethod: params.codeChallengeMethod,
       });
       setAuthCode(response.data.data.auth_code);
-      router.push('/handshake');
+      router.push(`/handshake${getQueryString()}`);
     } catch (err: any) {
       if (err.response?.status === 401) {
         setError('Contraseña incorrecta');
@@ -54,7 +54,7 @@ export default function LoginScreen() {
   return (
     <Container maxWidth="sm">
       <Box sx={{ mt: 8, mb: 4 }}>
-        <Button startIcon={<ArrowLeft size={18} />} onClick={() => router.push('/')} sx={{ mb: 2, color: 'text.secondary' }}>
+        <Button startIcon={<ArrowLeft size={18} />} onClick={() => router.push(`/identifier${getQueryString()}`)} sx={{ mb: 2, color: 'text.secondary' }}>
           Volver
         </Button>
         <Typography variant="h4" gutterBottom>

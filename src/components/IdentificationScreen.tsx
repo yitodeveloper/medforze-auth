@@ -19,7 +19,7 @@ type FormData = z.infer<typeof schema>;
 export default function IdentificationScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { setUsername } = useAuth();
+  const { setUsername, getQueryString } = useAuth();
   const router = useRouter();
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
@@ -32,10 +32,11 @@ export default function IdentificationScreen() {
     try {
       const response = await authApi.checkIdentifier(data.username);
       setUsername(data.username);
+      const queryString = getQueryString();
       if (response.data.payload.exists) {
-        router.push('/login');
+        router.push(`/login${queryString}`);
       } else {
-        router.push('/register');
+        router.push(`/register${queryString}`);
       }
     } catch (err) {
       setError('Ocurrió un error al verificar el usuario');

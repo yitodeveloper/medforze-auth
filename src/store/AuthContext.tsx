@@ -3,20 +3,21 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { authApi } from '@/api/auth';
-import { Box, CircularProgress, Typography, Container, Card, CardContent } from '@mui/material';
-import { AlertCircle } from 'lucide-react';
+import { Box, CircularProgress, Typography, Container, Card, CardContent, Button } from '@mui/material';
+import { ShieldAlert } from 'lucide-react';
 
 interface AuthContextType {
   params: {
     redirectUri: string | null;
+    clientId: string | null;
     codeChallenge: string | null;
     codeChallengeMethod: string | null;
-    codeVerifier: string | null;
   };
   username: string;
   setUsername: (username: string) => void;
   authCode: string;
   setAuthCode: (code: string) => void;
+  getQueryString: () => string;
   isLoading: boolean;
   error: string | null;
 }
@@ -33,32 +34,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const params = {
     redirectUri: searchParams.get('redirect_uri'),
+    clientId: searchParams.get('client_id'),
     codeChallenge: searchParams.get('code_challenge'),
     codeChallengeMethod: searchParams.get('code_challenge_method'),
-    codeVerifier: searchParams.get('code_verifier'),
+  };
+
+  const getQueryString = () => {
+    const sp = new URLSearchParams();
+    if (params.redirectUri) sp.set('redirect_uri', params.redirectUri);
+    if (params.clientId) sp.set('client_id', params.clientId);
+    if (params.codeChallenge) sp.set('code_challenge', params.codeChallenge);
+    if (params.codeChallengeMethod) sp.set('code_challenge_method', params.codeChallengeMethod);
+
+    const qs = sp.toString();
+    return qs ? `?${qs}` : '';
   };
 
   useEffect(() => {
     const validateApp = async () => {
-      if (!params.redirectUri || !params.codeChallenge || !params.codeChallengeMethod || !params.codeVerifier) {
-        // En una app real de OAuth, estos parámetros son obligatorios desde el inicio
-        // Si no vienen, podrías decidir si fallar o permitir navegación interna.
-        // El prompt dice que son obligatorios.
+      if (!params.redirectUri || !params.clientId || !params.codeChallenge || !params.codeChallengeMethod) {
+        setError('config_error');
         setIsLoading(false);
         return;
       }
 
       try {
-        await authApi.authorize(params.redirectUri);
+        await authApi.authorize(params.redirectUri, params.clientId);
         setIsLoading(false);
       } catch (err) {
-        setError('Aplicación no autorizada');
+        setError('config_error');
         setIsLoading(false);
       }
     };
 
     validateApp();
   }, [params.redirectUri]);
+
+  const handleClose = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      window.close();
+    }
+  };
 
   if (isLoading) {
     return (
@@ -72,15 +90,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   if (error) {
     return (
       <Container maxWidth="sm" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-        <Card sx={{ width: '100%', textAlign: 'center', p: 4, borderColor: 'error.main', borderWidth: 2, borderStyle: 'solid' }}>
-          <CardContent>
-            <AlertCircle size={48} color="#DC3545" />
-            <Typography variant="h5" color="error" sx={{ mt: 2, fontWeight: 700 }}>
-              Error Crítico
+        <Card sx={{ width: '100%', textAlign: 'center', p: 4, borderRadius: 2, boxShadow: 3 }}>
+          <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+            <ShieldAlert size={64} color="#f59e0b" />
+            <Typography variant="h5" sx={{ fontWeight: 700, color: 'text.primary' }}>
+              Error de configuración de la aplicación
             </Typography>
-            <Typography variant="body1" sx={{ mt: 1 }}>
-              {error}
+            <Typography variant="body1" color="text.secondary">
+              Lo sentimos, no podemos iniciar tu sesión en este momento debido a un problema técnico en el enlace de acceso.
             </Typography>
+            <Typography variant="body2" sx={{ bgcolor: 'grey.50', p: 2, borderRadius: 1, border: '1px solid', borderColor: 'grey.200', color: 'text.secondary' }}>
+              Por favor, cierra esta ventana y vuelve a intentarlo desde la aplicación de origen. Si el problema persiste, contacta al soporte técnico de Medforze.
+            </Typography>
+            <Button
+              variant="contained"
+              onClick={handleClose}
+              sx={{ mt: 2, px: 4, py: 1, textTransform: 'none', fontWeight: 600 }}
+            >
+              Cerrar
+            </Button>
           </CardContent>
         </Card>
       </Container>
@@ -88,7 +116,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ params, username, setUsername, authCode, setAuthCode, isLoading, error }}>
+    <AuthContext.Provider value={{ params, username, setUsername, authCode, setAuthCode, getQueryString, isLoading, error }}>
       {children}
     </AuthContext.Provider>
   );

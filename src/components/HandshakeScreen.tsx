@@ -23,7 +23,6 @@ export default function HandshakeScreen() {
 
         const response = await authApi.token({
           auth_code: authCode,
-          code_verifier: params.codeVerifier || '',
           device_info: deviceInfo,
         });
 
@@ -54,7 +53,7 @@ export default function HandshakeScreen() {
     };
 
     exchangeToken();
-  }, [authCode, params.codeVerifier, params.redirectUri]);
+  }, [authCode, params.redirectUri]);
 
   return (
     <Container maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
