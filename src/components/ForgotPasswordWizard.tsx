@@ -354,16 +354,7 @@ export default function ForgotPasswordWizard() {
           {/* Logo */}
           <Logo />
         </Box>
-        <Button
-          startIcon={<ArrowLeft size={18} />}
-          onClick={() => {
-            if (activeStep > 0) setActiveStep(activeStep - 1);
-            else router.push(`/login${getQueryString()}`);
-          }}
-          sx={{ color: 'text.secondary' }}
-        >
-          Volver
-        </Button>
+
       </Box>
       <Card sx={{ borderRadius: 2, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}>
         <CardContent sx={{ p: 4 }}>
@@ -378,6 +369,17 @@ export default function ForgotPasswordWizard() {
             ))}
           </Stepper>
           {renderStep()}
+            <Button
+                fullWidth
+                startIcon={<ArrowLeft size={18} />}
+                onClick={() => {
+                    if (activeStep > 0) setActiveStep(activeStep - 1);
+                    else router.push(`/login${getQueryString()}`);
+                }}
+                sx={{ mt: 1, color: 'text.secondary', fontWeight: 600 }}
+            >
+                Volver
+            </Button>
         </CardContent>
       </Card>
     </Container>

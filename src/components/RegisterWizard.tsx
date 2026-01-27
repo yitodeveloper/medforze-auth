@@ -254,9 +254,7 @@ export default function RegisterWizard() {
           {/* Logo */}
           <Logo />
         </Box>
-        <Button startIcon={<ArrowLeft size={18} />} onClick={() => router.push(`/identifier${getQueryString()}`)} sx={{ color: 'text.secondary' }}>
-          Cancelar
-        </Button>
+
       </Box>
 
       <Card>
@@ -589,6 +587,15 @@ export default function RegisterWizard() {
               </Button>
             </form>
           )}
+
+          <Button
+              fullWidth
+              startIcon={<ArrowLeft size={18} />}
+              onClick={() => router.push(`/identifier${getQueryString()}`)}
+              sx={{ mt: 1, color: 'text.secondary', fontWeight: 600 }}
+          >
+            Cancelar
+          </Button>
         </CardContent>
       </Card>
     </Container>

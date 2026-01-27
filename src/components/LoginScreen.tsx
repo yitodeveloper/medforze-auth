@@ -59,9 +59,7 @@ export default function LoginScreen() {
           {/* Logo */}
           <Logo />
         </Box>
-        <Button startIcon={<ArrowLeft size={18} />} onClick={() => router.push(`/identifier${getQueryString()}`)} sx={{ color: 'text.secondary' }}>
-          Volver
-        </Button>
+
       </Box>
       <Card>
         <CardContent>
@@ -105,6 +103,14 @@ export default function LoginScreen() {
               startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
             >
               {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+            </Button>
+            <Button
+                fullWidth
+                sx={{ mt: 1, color: 'text.secondary', fontWeight: 600 }}
+                startIcon={<ArrowLeft size={18} />}
+                onClick={() => router.push(`/identifier${getQueryString()}`)}
+            >
+              Volver
             </Button>
             <Button
               fullWidth

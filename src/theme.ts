@@ -44,7 +44,7 @@ export const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#007BFF',
+      main: '#2a9fd0',
     },
     background: {
       default: '#F8F9FA',
@@ -87,10 +87,10 @@ export const lightTheme = createTheme({
               borderColor: '#E9ECEF',
             },
             '&:hover fieldset': {
-              borderColor: '#007BFF',
+              borderColor: '#2a9fd0',
             },
             '&.Mui-focused fieldset': {
-              borderColor: '#007BFF',
+              borderColor: '#2a9fd0',
               boxShadow: '0 0 8px rgba(0, 123, 255, 0.2)',
             },
           },
@@ -114,7 +114,7 @@ export const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#007BFF', // Azul Medforze Brillante
+      main: '#2a9fd0', // Azul Medforze Brillante
     },
     background: {
       default: '#0A1929', // Azul Marino Profundo
@@ -125,7 +125,7 @@ export const darkTheme = createTheme({
       secondary: '#B2BAC2', // Gris Azulado
     },
     error: {
-      main: '#F44336', // Rojo Vibrante
+      main: '#D93025', // Rojo Vibrante
     },
     divider: '#1E4976',
   },
@@ -161,10 +161,10 @@ export const darkTheme = createTheme({
               borderColor: '#1E4976',
             },
             '&:hover fieldset': {
-              borderColor: '#007BFF',
+              borderColor: '#2a9fd0',
             },
             '&.Mui-focused fieldset': {
-              borderColor: '#007BFF',
+              borderColor: '#2a9fd0',
               boxShadow: '0 0 8px rgba(0, 123, 255, 0.4)',
             },
           },
