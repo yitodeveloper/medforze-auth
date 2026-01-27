@@ -44,7 +44,7 @@ export const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#2a9fd0',
+      main: '#2a5397',
     },
     background: {
       default: '#F8F9FA',
@@ -82,7 +82,7 @@ export const lightTheme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiOutlinedInput-root': {
-            backgroundColor: 'rgba(0, 0, 0, 0.05)',
+            backgroundColor: '#FFFFFF',
             '& fieldset': {
               borderColor: '#E9ECEF',
             },
