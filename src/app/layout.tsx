@@ -13,6 +13,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Medforze Auth",
   description: "Servidor de Identidad Medforze",
+  icons: {
+    icon: "https://medforze.s3.us-west-2.amazonaws.com/logos/icon_circle_small.png",
+  },
 };
 
 export default function RootLayout({

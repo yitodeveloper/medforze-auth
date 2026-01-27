@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Box, Typography, CircularProgress, Container } from '@mui/material';
 import { useAuth } from '@/store/AuthContext';
 import { ShieldCheck } from 'lucide-react';
+import Logo from '@/components/Logo';
 
 export default function HandshakeScreen() {
   const { params, authCode } = useAuth();
@@ -12,7 +13,7 @@ export default function HandshakeScreen() {
   React.useEffect(() => {
     if (authCode && params.redirectUri) {
       setCompleted(true);
-      
+
       const timer = setTimeout(() => {
         try {
           if (params.redirectUri) {
@@ -32,16 +33,20 @@ export default function HandshakeScreen() {
   return (
     <Container maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
       <Box sx={{ textAlign: 'center' }}>
+        <Box sx={{ mb: 6 }}>
+          {/* Logo */}
+          <Logo />
+        </Box>
         <Box sx={{ mb: 4, position: 'relative', display: 'inline-flex' }}>
-          <CircularProgress 
-            size={80} 
-            thickness={2} 
-            sx={{ 
+          <CircularProgress
+            size={80}
+            thickness={2}
+            sx={{
               color: 'primary.main',
               '& .MuiCircularProgress-circle': {
                 strokeLinecap: 'round',
               }
-            }} 
+            }}
           />
           <Box
             sx={{

@@ -8,6 +8,7 @@ import * as z from 'zod';
 import { authApi } from '@/api/auth';
 import { useAuth } from '@/store/AuthContext';
 import { ArrowLeft, CheckCircle2, Eye, EyeOff, Lock, User, KeyRound } from 'lucide-react';
+import Logo from '@/components/Logo';
 import { useRouter } from 'next/navigation';
 
 const steps = ['Identificación', 'Verificación', 'Nueva Contraseña'];
@@ -348,14 +349,18 @@ export default function ForgotPasswordWizard() {
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ mt: 8, mb: 4 }}>
+      <Box sx={{ mt: 8, mb: 4, textAlign: 'center' }}>
+        <Box sx={{ mb: 4 }}>
+          {/* Logo */}
+          <Logo />
+        </Box>
         <Button
           startIcon={<ArrowLeft size={18} />}
           onClick={() => {
             if (activeStep > 0) setActiveStep(activeStep - 1);
             else router.push(`/login${getQueryString()}`);
           }}
-          sx={{ mb: 2, color: 'text.secondary' }}
+          sx={{ color: 'text.secondary' }}
         >
           Volver
         </Button>

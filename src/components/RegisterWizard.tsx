@@ -8,6 +8,7 @@ import * as z from 'zod';
 import { authApi } from '@/api/auth';
 import { useAuth } from '@/store/AuthContext';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import Logo from '@/components/Logo';
 
 import { useRouter } from 'next/navigation';
 
@@ -147,14 +148,14 @@ export default function RegisterWizard() {
         purpose: 'registration'
       });
       setMailValidationToken(response.data.payload.action_token);
-      
+
       // Enviar OTP al teléfono antes de pasar al siguiente paso
       await authApi.sendOtp({
         user_identifier: `${contactForm.getValues().countryCode}${contactForm.getValues().phone}`,
         channel: 'sms',
         purpose: 'registration'
       });
-      
+
       setActiveStep(2);
       setPhoneTimer(60);
     } catch (err) {
@@ -248,8 +249,12 @@ export default function RegisterWizard() {
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ mt: 4, mb: 2 }}>
-        <Button startIcon={<ArrowLeft size={18} />} onClick={() => router.push(`/identifier${getQueryString()}`)} sx={{ mb: 2, color: 'text.secondary' }}>
+      <Box sx={{ mt: 8, mb: 4, textAlign: 'center' }}>
+        <Box sx={{ mb: 4 }}>
+          {/* Logo */}
+          <Logo />
+        </Box>
+        <Button startIcon={<ArrowLeft size={18} />} onClick={() => router.push(`/identifier${getQueryString()}`)} sx={{ color: 'text.secondary' }}>
           Cancelar
         </Button>
       </Box>

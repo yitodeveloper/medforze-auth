@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { authApi } from '@/api/auth';
 import { useAuth } from '@/store/AuthContext';
+import Logo from '@/components/Logo';
 
 import { useRouter } from 'next/navigation';
 
@@ -49,19 +50,8 @@ export default function IdentificationScreen() {
     <Container maxWidth="sm">
       <Box sx={{ mt: 8, mb: 4, textAlign: 'center' }}>
         <Box sx={{ mb: 4 }}>
-          {/* Logo Placeholder - Asumiendo variante negativa/blanca según lineamientos */}
-          <Typography
-            variant="h4"
-            component="h1"
-            sx={{
-              fontWeight: 700,
-              color: 'primary.main',
-              letterSpacing: '-0.5px',
-              textTransform: 'uppercase'
-            }}
-          >
-            Medforze
-          </Typography>
+          {/* Logo */}
+          <Logo />
         </Box>
       </Box>
       <Card>

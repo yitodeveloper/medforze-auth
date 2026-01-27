@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { authApi } from '@/api/auth';
 import { Box, CircularProgress, Typography, Container, Card, CardContent, Button } from '@mui/material';
 import { ShieldAlert } from 'lucide-react';
+import Logo from '@/components/Logo';
 
 interface AuthContextType {
   params: {
@@ -81,7 +82,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', bgcolor: 'background.default' }}>
-        <CircularProgress size={60} thickness={4} />
+        <Logo sx={{ mb: 4 }} />
+        <CircularProgress size={40} thickness={4} />
         <Typography sx={{ mt: 2, color: 'text.secondary' }}>Cargando Medforze...</Typography>
       </Box>
     );

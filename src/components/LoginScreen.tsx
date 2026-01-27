@@ -8,6 +8,7 @@ import * as z from 'zod';
 import { authApi } from '@/api/auth';
 import { useAuth } from '@/store/AuthContext';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import Logo from '@/components/Logo';
 
 import { useRouter } from 'next/navigation';
 
@@ -53,8 +54,12 @@ export default function LoginScreen() {
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ mt: 8, mb: 4 }}>
-        <Button startIcon={<ArrowLeft size={18} />} onClick={() => router.push(`/identifier${getQueryString()}`)} sx={{ mb: 2, color: 'text.secondary' }}>
+      <Box sx={{ mt: 8, mb: 4, textAlign: 'center' }}>
+        <Box sx={{ mb: 4 }}>
+          {/* Logo */}
+          <Logo />
+        </Box>
+        <Button startIcon={<ArrowLeft size={18} />} onClick={() => router.push(`/identifier${getQueryString()}`)} sx={{ color: 'text.secondary' }}>
           Volver
         </Button>
       </Box>
@@ -101,10 +106,10 @@ export default function LoginScreen() {
             >
               {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
             </Button>
-            <Button 
-              fullWidth 
-              variant="text" 
-              sx={{ mt: 2, color: 'primary.main', fontWeight: 600 }} 
+            <Button
+              fullWidth
+              variant="text"
+              sx={{ mt: 2, color: 'primary.main', fontWeight: 600 }}
               onClick={() => router.push(`/forgot-password${getQueryString()}`)}
             >
               Olvidé mi contraseña
