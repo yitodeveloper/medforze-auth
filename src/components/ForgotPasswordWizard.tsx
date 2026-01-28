@@ -279,6 +279,7 @@ export default function ForgotPasswordWizard() {
               autoFocus
               label="Nueva Contraseña"
               type={showPassword ? 'text' : 'password'}
+              autoComplete="new-password"
               {...passwordForm.register('password')}
               error={!!passwordForm.formState.errors.password}
               sx={{ mb: 1 }}
@@ -312,6 +313,7 @@ export default function ForgotPasswordWizard() {
               fullWidth
               label="Confirmar Contraseña"
               type={showConfirmPassword ? 'text' : 'password'}
+              autoComplete="new-password"
               {...passwordForm.register('confirmPassword')}
               error={!!passwordForm.formState.errors.confirmPassword}
               helperText={passwordForm.formState.errors.confirmPassword?.message}

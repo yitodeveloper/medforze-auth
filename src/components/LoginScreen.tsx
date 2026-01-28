@@ -72,12 +72,20 @@ export default function LoginScreen() {
             </Typography>
           </Box>
           <form onSubmit={handleSubmit(onSubmit)}>
+            {/* Hidden username field for password managers */}
+            <input
+              type="hidden"
+              autoComplete="username"
+              value={username || ''}
+              {...register('username' as any)}
+            />
             <TextField
               fullWidth
               label="Contraseña"
               autoFocus
               type={showPassword ? 'text' : 'password'}
               variant="outlined"
+              autoComplete="current-password"
               {...register('password')}
               error={!!errors.password}
               helperText={errors.password?.message}

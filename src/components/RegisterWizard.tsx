@@ -549,6 +549,7 @@ export default function RegisterWizard() {
                         fullWidth
                         type="password"
                         label="Contraseña"
+                        autoComplete="new-password"
                         error={!!profileForm.formState.errors.password}
                         helperText={profileForm.formState.errors.password?.message}
                       />

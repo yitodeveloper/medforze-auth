@@ -70,6 +70,7 @@ export default function IdentificationScreen() {
               autoFocus
               label="Usuario o Correo Electrónico"
               variant="outlined"
+              autoComplete="username"
               {...register('username')}
               error={!!errors.username}
               helperText={errors.username?.message}
