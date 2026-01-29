@@ -13,6 +13,7 @@ interface AuthContextType {
     clientId: string | null;
     codeChallenge: string | null;
     codeChallengeMethod: string | null;
+    uiStyle: string | null;
   };
   username: string;
   setUsername: (username: string) => void;
@@ -38,6 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     clientId: searchParams.get('client_id'),
     codeChallenge: searchParams.get('code_challenge'),
     codeChallengeMethod: searchParams.get('code_challenge_method'),
+    uiStyle: searchParams.get('ui_style'),
   };
 
   const getQueryString = () => {
@@ -46,6 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (params.clientId) sp.set('client_id', params.clientId);
     if (params.codeChallenge) sp.set('code_challenge', params.codeChallenge);
     if (params.codeChallengeMethod) sp.set('code_challenge_method', params.codeChallengeMethod);
+    if (params.uiStyle) sp.set('ui_style', params.uiStyle);
 
     const qs = sp.toString();
     return qs ? `?${qs}` : '';

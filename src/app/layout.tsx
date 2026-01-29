@@ -26,13 +26,13 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${inter.variable} antialiased`}>
-        <ThemeRegistry>
-          <Suspense fallback={<div>Cargando...</div>}>
+        <Suspense fallback={<div>Cargando...</div>}>
+          <ThemeRegistry>
             <AuthProvider>
               {children}
             </AuthProvider>
-          </Suspense>
-        </ThemeRegistry>
+          </ThemeRegistry>
+        </Suspense>
       </body>
     </html>
   );
